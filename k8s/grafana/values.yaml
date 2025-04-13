@@ -1,0 +1,25 @@
+adminUser: admin
+adminPassword: strongadminpass123
+
+persistence:
+  enabled: true
+  storageClassName: "standard"
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: grafana.yourdomain.com
+      paths: ["/"]
+  tls:
+    - secretName: grafana-tls
+      hosts:
+        - grafana.yourdomain.com
