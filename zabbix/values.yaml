@@ -1,0 +1,43 @@
+
+replicaCount: 1
+
+zabbixServer:
+  resources:
+    limits:
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    size: 10Gi
+
+zabbixWeb:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hosts:
+      - host: zabbix.yourdomain.com
+        paths: ["/"]
+    tls:
+      - secretName: zabbix-tls
+        hosts:
+          - zabbix.yourdomain.com
+
+mariadb:
+  enabled: true
+  architecture: standalone
+  auth:
+    rootPassword: zabbix_root
+    username: zabbix
+    password: zabbix123
+    database: zabbix
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: "standard"
